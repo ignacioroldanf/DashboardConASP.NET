@@ -19,7 +19,7 @@ namespace WebHeladeria.Controllers
         {
 
             var sucursales = _context.Sucursales.ToList(); // Obteniendo todas las sucursales
-            return View(sucursales); // Enviando los datos a la vista
+            return View(sucursales); // Enviando  datos a la vista
 
 
             //return View(await _context.Sucursales.ToListAsync());

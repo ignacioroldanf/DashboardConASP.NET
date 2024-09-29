@@ -1,0 +1,25 @@
+﻿@model IEnumerable<Sucursale>
+
+<h2>Lista de Sucursales</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Localidad</th>
+            <th>Calle</th>
+            <th>Número</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sucursal in Model)
+        {
+            <tr>
+                <td>@sucursal.IdSucursal</td>
+                <td>@sucursal.Localidad</td>
+                <td>@sucursal.CalleSucursal</td>
+                <td>@sucursal.NroSucursal</td>
+            </tr>
+        }
+    </tbody>
+</table>

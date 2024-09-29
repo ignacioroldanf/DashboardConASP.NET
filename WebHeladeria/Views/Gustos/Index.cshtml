@@ -1,0 +1,23 @@
+﻿@model IEnumerable<Gusto>
+
+<h2>Lista de Gustos</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var gusto in Model)
+        {
+            <tr>
+                <td>@gusto.IdGusto</td>
+                <td>@gusto.NombreGusto</td>
+                <td>@gusto.DescripGusto</td>
+            </tr>
+        }
+    </tbody>
+</table>

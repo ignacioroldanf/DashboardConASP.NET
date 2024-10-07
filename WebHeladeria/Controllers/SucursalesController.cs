@@ -17,12 +17,11 @@ namespace WebHeladeria.Controllers
         
         public async Task<IActionResult> Index()
         {
+            // Obtener las sucursales de manera asíncrona
+            var sucursales = await _context.Sucursales.ToListAsync();
 
-            var sucursales = _context.Sucursales.ToList(); // Obteniendo todas las sucursales
-            return View(sucursales); // Enviando  datos a la vista
-
-
-            //return View(await _context.Sucursales.ToListAsync());
+            // Enviar los datos a la vista
+            return View(sucursales);
         }
     }
 }

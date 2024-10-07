@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebHeladeria.Models;
@@ -18,6 +17,8 @@ public partial class HeladeriaContext : DbContext
 
     public virtual DbSet<Gusto> Gustos { get; set; }
 
+    public virtual DbSet<Localidade> Localidades { get; set; }
+
     public virtual DbSet<Sucursale> Sucursales { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
@@ -25,30 +26,8 @@ public partial class HeladeriaContext : DbContext
     public virtual DbSet<Venta> Ventas { get; set; }
 
     public virtual DbSet<VentasDetalle> VentasDetalles { get; set; }
+    public DbSet<Reporte> Reportes { get; set; }
 
-    public async Task<List<Reporte>> ObtenerReporteAsync() //Genera la clase Reporte
-    {
-        var sql = @"
-            SELECT 
-                g.id_gusto AS IdGusto,
-                g.nombre_gusto AS NombreGusto,
-                SUM(vd.cantidad) AS CantidadTotalPedida
-            FROM 
-                Ventas_Detalle vd
-            JOIN 
-                Gustos g ON vd.id_gusto = g.id_gusto
-            GROUP BY 
-                g.id_gusto, g.nombre_gusto
-            ORDER BY 
-                CantidadTotalPedida DESC";
-
-        //return await this.Set<Reporte>().FromSqlRaw(sql).ToListAsync();
-            var reportes = await this.Database
-            .GetDbConnection()
-            .QueryAsync<Reporte>(sql);  // Usa Dapper
-
-        return reportes.ToList();
-    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -58,7 +37,7 @@ public partial class HeladeriaContext : DbContext
     {
         modelBuilder.Entity<Gusto>(entity =>
         {
-            entity.HasKey(e => e.IdGusto).HasName("PK__Gustos__63F35898C0EB452C");
+            entity.HasKey(e => e.IdGusto).HasName("PK__Gustos__63F35898EF1A9029");
 
             entity.Property(e => e.IdGusto).HasColumnName("id_gusto");
             entity.Property(e => e.DescripGusto)
@@ -69,18 +48,30 @@ public partial class HeladeriaContext : DbContext
                 .HasColumnName("nombre_gusto");
         });
 
+        modelBuilder.Entity<Localidade>(entity =>
+        {
+            entity.HasKey(e => e.IdLocalidad).HasName("PK__Localida__9A5E82AAC33CAB24");
+
+            entity.Property(e => e.IdLocalidad).HasColumnName("id_localidad");
+            entity.Property(e => e.NombreLocalidad)
+                .HasMaxLength(60)
+                .HasColumnName("nombre_localidad");
+        });
+
         modelBuilder.Entity<Sucursale>(entity =>
         {
-            entity.HasKey(e => e.IdSucursal).HasName("PK__Sucursal__4C75801316C3B782");
+            entity.HasKey(e => e.IdSucursal).HasName("PK__Sucursal__4C758013589F068C");
 
             entity.Property(e => e.IdSucursal).HasColumnName("id_sucursal");
             entity.Property(e => e.CalleSucursal)
                 .HasMaxLength(60)
                 .HasColumnName("calle_sucursal");
-            entity.Property(e => e.Localidad)
-                .HasMaxLength(60)
-                .HasColumnName("localidad");
+            entity.Property(e => e.Localidad).HasColumnName("localidad");
             entity.Property(e => e.NroSucursal).HasColumnName("nro_sucursal");
+
+            entity.HasOne(d => d.LocalidadNavigation).WithMany(p => p.Sucursales)
+                .HasForeignKey(d => d.Localidad)
+                .HasConstraintName("FK__Sucursale__local__6383C8BA");
         });
 
         modelBuilder.Entity<Usuario>(entity =>
@@ -98,7 +89,7 @@ public partial class HeladeriaContext : DbContext
 
         modelBuilder.Entity<Venta>(entity =>
         {
-            entity.HasKey(e => e.IdVenta).HasName("PK__Ventas__459533BF533118BA");
+            entity.HasKey(e => e.IdVenta).HasName("PK__Ventas__459533BF41C6759F");
 
             entity.Property(e => e.IdVenta).HasColumnName("id_venta");
             entity.Property(e => e.Fecha).HasColumnName("fecha");
@@ -106,12 +97,12 @@ public partial class HeladeriaContext : DbContext
 
             entity.HasOne(d => d.IdSucursalNavigation).WithMany(p => p.Venta)
                 .HasForeignKey(d => d.IdSucursal)
-                .HasConstraintName("FK__Ventas__id_sucur__3D5E1FD2");
+                .HasConstraintName("FK__Ventas__id_sucur__68487DD7");
         });
 
         modelBuilder.Entity<VentasDetalle>(entity =>
         {
-            entity.HasKey(e => new { e.IdVenta, e.IdGusto }).HasName("PK__Ventas_D__D3AA0636D6C8CB1C");
+            entity.HasKey(e => new { e.IdVenta, e.IdGusto }).HasName("PK__Ventas_D__D3AA06367E70A2B5");
 
             entity.ToTable("Ventas_Detalle");
 
@@ -122,15 +113,22 @@ public partial class HeladeriaContext : DbContext
             entity.HasOne(d => d.IdGustoNavigation).WithMany(p => p.VentasDetalles)
                 .HasForeignKey(d => d.IdGusto)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Ventas_De__id_gu__412EB0B6");
+                .HasConstraintName("FK__Ventas_De__id_gu__6C190EBB");
 
             entity.HasOne(d => d.IdVentaNavigation).WithMany(p => p.VentasDetalles)
                 .HasForeignKey(d => d.IdVenta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Ventas_De__id_ve__403A8C7D");
+                .HasConstraintName("FK__Ventas_De__id_ve__6B24EA82");
         });
+        modelBuilder.Entity<Reporte>().HasNoKey();
 
         OnModelCreatingPartial(modelBuilder);
+    }
+
+    internal async Task<List<Reporte>> ObtenerReporteAsync()
+    {
+        // Implementa la lógica para obtener los reportes
+        return await this.Reportes.ToListAsync();
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

@@ -1,25 +1,39 @@
 ﻿@model IEnumerable<Sucursale>
 
-<h2>Lista de Sucursales</h2>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h3 class="m-0 font-weight-bold text-primary">Lista de Sucursales</h3>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Localidad</th>
-            <th>Calle</th>
-            <th>Número</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var sucursal in Model)
-        {
-            <tr>
-                <td>@sucursal.IdSucursal</td>
-                <td>@sucursal.Localidad</td>
-                <td>@sucursal.CalleSucursal</td>
-                <td>@sucursal.NroSucursal</td>
-            </tr>
-        }
-    </tbody>
-</table>
+                            <thead>
+                                <tr>
+                                <th rowspan="1" colspan="1">Id</th>
+                                <th rowspan="1" colspan="1">Calle</th>
+                                <th rowspan="1" colspan="1">Número</th>
+                                <th rowspan="1" colspan="1">Gusto más vendido</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                    @foreach (var sucursal in Model)
+                                    {
+                                    <tr>
+                                        <td>@sucursal.IdSucursal</td>
+                                        <td>@sucursal.CalleSucursal</td>
+                                        <td>@sucursal.NroSucursal</td>
+                                    </tr>
+                                    }
+                            </tbody>
+
+
+                        </table>
+                    </div>
+            </div>
+        </div>
+    </div>
+

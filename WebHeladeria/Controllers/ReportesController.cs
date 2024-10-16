@@ -3,11 +3,11 @@ using WebHeladeria.Servicios.Contrato;
 
 namespace WebHeladeria.Controllers
 {
-    public class ReporteController : Controller
+    public class ReportesController : Controller
     {
         private readonly IReporteService _reporteService;
 
-        public ReporteController(IReporteService reporteService)
+        public ReportesController(IReporteService reporteService)
         {
             _reporteService = reporteService;
         }

@@ -1,9 +1,9 @@
-﻿@model IEnumerable<Gusto>
+﻿@model IEnumerable<Localidade>
 
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h3 class="m-0 font-weight-bold text-primary">Lista de Gustos</h3>
+        <h3 class="m-0 font-weight-bold text-primary">Lista de Localidades</h3>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -15,17 +15,23 @@
                             <tr>
                                 <th rowspan="1" colspan="1">Id</th>
                                 <th rowspan="1" colspan="1">Nombre</th>
-                                <th rowspan="1" colspan="1">Descripción</th>
+                                <th rowspan="1" colspan="1">Gusto más vendido</th>
+                                <th rowspan="1" colspan="1">Lista de Sucursales</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            @foreach (var gusto in Model)
+                            @foreach (var localidade in Model)
                             {
                                 <tr>
-                                    <td>@gusto.IdGusto</td>
-                                    <td>@gusto.NombreGusto</td>
-                                    <td>@gusto.DescripGusto</td>
+                                    <td>@localidade.IdLocalidad</td>
+                                    <td>@localidade.NombreLocalidad</td>
+                                    <td>gusto mas vendido</td>
+                                    <td>
+                                        <a asp-controller="Sucursales" asp-action="SucursalesPorLocalidad" asp-route-idLocalidad="@localidade.IdLocalidad">
+                                            Sucursales en @localidade.NombreLocalidad
+                                        </a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -36,3 +42,4 @@
             </div>
         </div>
     </div>
+

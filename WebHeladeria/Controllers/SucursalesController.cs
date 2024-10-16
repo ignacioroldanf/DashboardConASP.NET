@@ -2,26 +2,36 @@
 using Microsoft.EntityFrameworkCore;
 using WebHeladeria.Models;
 
-namespace WebHeladeria.Controllers
+public class SucursalesController : Controller
 {
-    public class SucursalesController : Controller
-    {
-        private readonly HeladeriaContext _context;
-        
-        public SucursalesController(HeladeriaContext context)
-        {
-            _context = context;
-        }
-        
-        
-        
-        public async Task<IActionResult> Index()
-        {
-            // Obtener las sucursales de manera asíncrona
-            var sucursales = await _context.Sucursales.ToListAsync();
+    private readonly HeladeriaContext _context;
 
-            // Enviar los datos a la vista
-            return View(sucursales);
-        }
+    // Inyección de dependencias en el constructor
+    public SucursalesController(HeladeriaContext context)
+    {
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        // Obtener todas las sucursales de manera asíncrona
+        var sucursales = await _context.Sucursales.ToListAsync();
+        return View(sucursales);
+    }
+
+    public IActionResult SucursalesPorLocalidad(int idLocalidad)
+    {
+        // Obtener las sucursales filtradas por la localidad seleccionada
+        var sucursales = _context.Sucursales
+            .Where(s => s.Localidad == idLocalidad)
+            .ToList();
+
+        // Obtener el nombre de la localidad para mostrar en la vista
+        ViewBag.NombreLocalidad = _context.Localidades
+            .Where(l => l.IdLocalidad == idLocalidad)
+            .Select(l => l.NombreLocalidad)
+            .FirstOrDefault();
+
+        return View(sucursales);
     }
 }

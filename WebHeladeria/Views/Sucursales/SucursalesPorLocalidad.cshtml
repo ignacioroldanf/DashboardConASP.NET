@@ -1,0 +1,46 @@
+﻿@model IEnumerable<WebHeladeria.Models.Sucursale>
+
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h3 class="m-0 font-weight-bold text-primary">Lista de Sucursales en @ViewBag.NombreLocalidad</h3>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="col-sm-12">
+                    <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+
+                        <thead>
+                            <tr>
+                                <th rowspan="1" colspan="1">Id</th>
+                                <th rowspan="1" colspan="1">Calle</th>
+                                <th rowspan="1" colspan="1">Número</th>
+                                <th rowspan="1" colspan="1">Gusto más vendido</th>
+                                <th rowspan="1" colspan="1">Lista de Gustos</th>
+
+                                
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var sucursal in Model)
+                            {
+                                <tr>
+                                    <td>@sucursal.IdSucursal</td>
+                                    <td>@sucursal.CalleSucursal</td>
+                                    <td>@sucursal.NroSucursal</td>
+                                    <td>El gusto mas vendido</td>
+                                    <td>
+                                        <a asp-controller="Gustos" asp-action="GustosPorSucursal" asp-route-idSucursal="@sucursal.IdSucursal">Gustos vendidos en @sucursal.CalleSucursal</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>

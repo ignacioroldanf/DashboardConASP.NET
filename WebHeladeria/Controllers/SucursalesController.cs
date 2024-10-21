@@ -24,6 +24,21 @@ public class SucursalesController : Controller
         // Obtener las sucursales filtradas por la localidad seleccionada
         var sucursales = _context.Sucursales
             .Where(s => s.Localidad == idLocalidad)
+            .Select(s => new
+            {
+                Sucursal = s,
+                GustosMasVendidos = _context.VentasDetalles
+                    .Where(v => v.IdVentaNavigation.IdSucursal == s.IdSucursal)
+                    .GroupBy(v => v.IdGustoNavigation.NombreGusto)
+                    .Select(g => new
+                    {
+                        Gusto = g.Key,
+                        CantidadVendida = g.Sum(v => v.Cantidad)
+                    })
+                    .OrderByDescending(g => g.CantidadVendida)
+                    .Take(5) // Obtener el top 5 de gustos más vendidos
+                    .ToList()
+            })
             .ToList();
 
         // Obtener el nombre de la localidad para mostrar en la vista
@@ -34,4 +49,5 @@ public class SucursalesController : Controller
 
         return View(sucursales);
     }
+
 }

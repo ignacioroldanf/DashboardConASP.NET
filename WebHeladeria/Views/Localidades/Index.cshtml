@@ -1,5 +1,4 @@
-﻿@model IEnumerable<Localidade>
-
+﻿@model IEnumerable<WebHeladeria.Models.Localidade>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -10,23 +9,35 @@
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                 <div class="col-sm-12">
                     <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
-
                         <thead>
                             <tr>
-                                <th rowspan="1" colspan="1">Id</th>
-                                <th rowspan="1" colspan="1">Nombre</th>
-                                <th rowspan="1" colspan="1">Gusto más vendido</th>
-                                <th rowspan="1" colspan="1">Lista de Sucursales</th>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Top 5 gustos más vendidos</th>
+                                <th>Lista de Sucursales</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             @foreach (var localidade in Model)
                             {
                                 <tr>
                                     <td>@localidade.IdLocalidad</td>
                                     <td>@localidade.NombreLocalidad</td>
-                                    <td>gusto mas vendido</td>
+                                    <td>
+                                        @if (localidade.GustosMasVendidos.Any())
+                                        {
+                                            <ol>
+                                                @foreach (var gusto in localidade.GustosMasVendidos)
+                                                {
+                                                    <li>@gusto</li>
+                                                }
+                                            </ol>
+                                        }
+                                        else
+                                        {
+                                            <span>No hay datos de ventas</span>
+                                        }
+                                    </td>
                                     <td>
                                         <a asp-controller="Sucursales" asp-action="SucursalesPorLocalidad" asp-route-idLocalidad="@localidade.IdLocalidad">
                                             Sucursales en @localidade.NombreLocalidad
@@ -35,11 +46,10 @@
                                 </tr>
                             }
                         </tbody>
-
-
                     </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 

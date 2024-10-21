@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebHeladeria.Models;
 
@@ -16,4 +17,8 @@ public partial class Sucursale
     public virtual Localidade? LocalidadNavigation { get; set; }
 
     public virtual ICollection<Venta> Venta { get; set; } = new List<Venta>();
+    
+    [NotMapped]
+    public List<string> GustosMasVendidos { get; set; } = new List<string>();
+
 }

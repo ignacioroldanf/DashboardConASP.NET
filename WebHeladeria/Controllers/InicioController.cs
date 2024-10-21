@@ -81,7 +81,7 @@ namespace WebHeladeria.Controllers
                 new ClaimsPrincipal(claimsIdentity), properties);
 
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Localidades");
         }
     }
 }

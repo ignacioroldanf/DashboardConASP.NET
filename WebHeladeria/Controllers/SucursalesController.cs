@@ -21,9 +21,11 @@ public class SucursalesController : Controller
 
     public IActionResult SucursalesPorLocalidad(int idLocalidad)
     {
+        int KilosObjetivo = 5;
+
         // Obtener las sucursales filtradas por la localidad seleccionada
         var sucursales = _context.Sucursales
-            .Where(s => s.Localidad == idLocalidad)
+            .Where(s => s.IdLocalidad == idLocalidad)
             .Select(s => new
             {
                 Sucursal = s,
@@ -37,7 +39,15 @@ public class SucursalesController : Controller
                     })
                     .OrderByDescending(g => g.CantidadVendida)
                     .Take(5) // Obtener el top 5 de gustos más vendidos
-                    .ToList()
+                    .ToList(),
+
+                    KilosVendidos = _context.VentasDetalles
+                    .Where(v => v.IdVentaNavigation.IdSucursal == s.IdSucursal)
+                    .Sum(v => v.Cantidad),
+
+                    EstadoObjetivo = _context.VentasDetalles
+                    .Where(v => v.IdVentaNavigation.IdSucursal == s.IdSucursal)
+                    .Sum(v => v.Cantidad) > KilosObjetivo ? "Objetivo completo" : "Objetivo incompleto"
             })
             .ToList();
 

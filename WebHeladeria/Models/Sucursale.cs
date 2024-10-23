@@ -8,7 +8,7 @@ public partial class Sucursale
 {
     public int IdSucursal { get; set; }
 
-    public int? Localidad { get; set; }
+    public int? IdLocalidad { get; set; }
 
     public string? CalleSucursal { get; set; }
 

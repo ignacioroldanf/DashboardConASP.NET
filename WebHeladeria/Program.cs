@@ -25,7 +25,6 @@ builder.Services.AddDbContext<HeladeriaContext>(options =>
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>(); //Permite la interfaz de usuario
 
-builder.Services.AddScoped<IReporteService, ReporteService>();  //permite la interfaz del reporte
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

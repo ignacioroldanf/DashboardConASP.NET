@@ -26,7 +26,6 @@ public partial class HeladeriaContext : DbContext
     public virtual DbSet<Venta> Ventas { get; set; }
 
     public virtual DbSet<VentasDetalle> VentasDetalles { get; set; }
-    public DbSet<Reporte> Reportes { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -66,11 +65,11 @@ public partial class HeladeriaContext : DbContext
             entity.Property(e => e.CalleSucursal)
                 .HasMaxLength(60)
                 .HasColumnName("calle_sucursal");
-            entity.Property(e => e.Localidad).HasColumnName("localidad");
+            entity.Property(e => e.IdLocalidad).HasColumnName("localidad");
             entity.Property(e => e.NroSucursal).HasColumnName("nro_sucursal");
 
             entity.HasOne(d => d.LocalidadNavigation).WithMany(p => p.Sucursales)
-                .HasForeignKey(d => d.Localidad)
+                .HasForeignKey(d => d.IdLocalidad)
                 .HasConstraintName("FK__Sucursale__local__6383C8BA");
         });
 
@@ -120,16 +119,10 @@ public partial class HeladeriaContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Ventas_De__id_ve__6B24EA82");
         });
-        modelBuilder.Entity<Reporte>().HasNoKey();
 
         OnModelCreatingPartial(modelBuilder);
     }
 
-    internal async Task<List<Reporte>> ObtenerReporteAsync()
-    {
-        // Implementa la lógica para obtener los reportes
-        return await this.Reportes.ToListAsync();
-    }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

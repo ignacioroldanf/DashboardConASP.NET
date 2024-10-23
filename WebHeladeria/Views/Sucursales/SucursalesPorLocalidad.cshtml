@@ -14,6 +14,8 @@
                                 <th>Id</th>
                                 <th>Calle</th>
                                 <th>Número</th>
+                                <th>Kilos Vendidos</th>
+                                <th>Estado</th>
                                 <th>Top 5 Gustos Más Vendidos</th>
                                 <th>Lista de Gustos</th>
                             </tr>
@@ -26,6 +28,8 @@
                                     <td>@sucursal.Sucursal.IdSucursal</td>
                                     <td>@sucursal.Sucursal.CalleSucursal</td>
                                     <td>@sucursal.Sucursal.NroSucursal</td>
+                                    <td>@sucursal.KilosVendidos</td>
+                                    <td>@sucursal.EstadoObjetivo</td>
                                     <td>
 
                                             <ol>
@@ -50,3 +54,6 @@
         </div>
     </div>
 </div>
+<a asp-controller="Localidades" asp-action="Index" class="btn btn-primary btn-icon-split btn-sm">
+    <span class="text">Volver a Localidades</span>
+    </a>

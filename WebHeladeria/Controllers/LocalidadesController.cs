@@ -22,8 +22,11 @@ namespace WebHeladeria.Controllers
             // Enviar los datos a la vista
             return View(localidades);
         }
+
         public IActionResult GustosPorLocalidad(int idLocalidad)
         {
+            int KilosObjetivo = 10;
+
             var localidad = _context.Localidades
                 .Where(l => l.IdLocalidad == idLocalidad)
                 .Select(l => new
@@ -31,19 +34,26 @@ namespace WebHeladeria.Controllers
                     IdLocalidad = l.IdLocalidad,
                     NombreLocalidad = l.NombreLocalidad,
                     GustosMasVendidos = _context.VentasDetalles
-                        .Where(v => v.IdVentaNavigation.IdSucursalNavigation.Localidad == l.IdLocalidad)
+                        .Where(v => v.IdVentaNavigation.IdSucursalNavigation.IdLocalidad == l.IdLocalidad)
                         .GroupBy(v => v.IdGustoNavigation.NombreGusto)
-                        .Select(g => g.Key) // solo el nombre del gusto
-                        .OrderByDescending(g => g.Count()) // cuenta para ordenar
+                        .Select(g => g.Key) 
+                        .OrderByDescending(g => g.Count()) 
                         .Take(5)
-                        .ToList()
+                        .ToList(),
+
+                    KilosVendidos = _context.VentasDetalles
+                    .Where(v => v.IdVentaNavigation.IdSucursalNavigation.IdLocalidad == l.IdLocalidad)
+                    .Sum(v => v.Cantidad),
+
+                    EstadoObjetivo = _context.VentasDetalles
+                    .Where(v => v.IdVentaNavigation.IdSucursalNavigation.IdLocalidad == l.IdLocalidad)
+                    .Sum(v => v.Cantidad) > KilosObjetivo ? "Objetivo Completo" : "Objetivo Incompleto"
                 })
-                .FirstOrDefault(); // Asegúrate de obtener solo una localidad
+                .FirstOrDefault(); 
 
-
-            return View(Index); // envía una lista con la localidad
+            return View(Index); 
         }
 
 
     }
-}
+    }

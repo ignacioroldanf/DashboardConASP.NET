@@ -16,4 +16,9 @@ public partial class Localidade
     [NotMapped]
     public List<string> GustosMasVendidos { get; set; } = new List<string>();
 
+    [NotMapped]
+    public decimal KilosVendidos { get; set; }
+
+    [NotMapped]
+    public string EstadoObjetivo { get; set; }
 }

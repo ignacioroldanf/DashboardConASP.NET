@@ -6,7 +6,6 @@ public class SucursalesController : Controller
 {
     private readonly HeladeriaContext _context;
 
-    // Inyección de dependencias en el constructor
     public SucursalesController(HeladeriaContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -14,16 +13,14 @@ public class SucursalesController : Controller
 
     public async Task<IActionResult> Index()
     {
-        // Obtener todas las sucursales de manera asíncrona
         var sucursales = await _context.Sucursales.ToListAsync();
         return View(sucursales);
     }
 
     public IActionResult SucursalesPorLocalidad(int idLocalidad)
     {
-        int KilosObjetivo = 5;
+        int KilosObjetivo = 10;
 
-        // Obtener las sucursales filtradas por la localidad seleccionada
         var sucursales = _context.Sucursales
             .Where(s => s.IdLocalidad == idLocalidad)
             .Select(s => new
@@ -38,20 +35,25 @@ public class SucursalesController : Controller
                         CantidadVendida = g.Sum(v => v.Cantidad)
                     })
                     .OrderByDescending(g => g.CantidadVendida)
-                    .Take(5) // Obtener el top 5 de gustos más vendidos
+                    .Take(5) //top 5
                     .ToList(),
 
                     KilosVendidos = _context.VentasDetalles
                     .Where(v => v.IdVentaNavigation.IdSucursal == s.IdSucursal)
                     .Sum(v => v.Cantidad),
 
-                    EstadoObjetivo = _context.VentasDetalles
+                    SemaforoEstado = _context.VentasDetalles
                     .Where(v => v.IdVentaNavigation.IdSucursal == s.IdSucursal)
-                    .Sum(v => v.Cantidad) > KilosObjetivo ? "Objetivo completo" : "Objetivo incompleto"
+                    .Sum(v => v.Cantidad) > 5 ? "verde"
+                    : _context.VentasDetalles
+                    .Where(v => v.IdVentaNavigation.IdSucursal == s.IdSucursal)
+                    .Sum(v => v.Cantidad) >= 4 ? "amarillo"
+                    : "rojo"
+
             })
             .ToList();
 
-        // Obtener el nombre de la localidad para mostrar en la vista
+
         ViewBag.NombreLocalidad = _context.Localidades
             .Where(l => l.IdLocalidad == idLocalidad)
             .Select(l => l.NombreLocalidad)

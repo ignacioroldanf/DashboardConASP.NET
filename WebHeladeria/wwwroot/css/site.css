@@ -41,6 +41,33 @@ body {
     margin-left: 250px; /* Evitar superposición con el sidebar */
     padding: 20px;
 }
+tr{
+    text-align:center;
+}
+
+.parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.semaforo {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
 
 
+.verde {
+    background-color: green;
+}
+
+.amarillo {
+    background-color: yellow;
+}
+
+.rojo {
+    background-color: red;
+}
 

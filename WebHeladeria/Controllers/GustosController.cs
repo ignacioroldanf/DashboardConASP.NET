@@ -2,50 +2,55 @@
 using Microsoft.EntityFrameworkCore;
 using WebHeladeria.Models;
 
-namespace WebHeladeria.Controllers
+public class GustosController : Controller
 {
-    public class GustosController : Controller
+    private readonly HeladeriaContext _context;
+
+    public GustosController(HeladeriaContext context)
     {
-        private readonly HeladeriaContext _context;
+        _context = context;
+    }
 
-        public GustosController(HeladeriaContext context)
+    public async Task<IActionResult> Index()
+    {
+        var gustos = await _context.Gustos.ToListAsync();
+        return View(gustos);
+    }
+
+    public IActionResult GustosPorSucursal(int idSucursal)
+    {
+        if (idSucursal <= 0)
         {
-            _context = context;
+            return NotFound();
         }
 
-        public IActionResult Index()
-        {
-            var gustos = _context.Gustos.ToList();
-            return View(gustos);
-        }
+        int KilosObjetivo = 5; // Ajustar según tu necesidad
 
-        public IActionResult GustosPorSucursal(int idSucursal)
-        {
-            // Verificar que el idSucursal sea válido
-            if (idSucursal <= 0)
+        var gustosVendidos = _context.VentasDetalles
+            .Include(vd => vd.IdGustoNavigation)
+            .Include(vd => vd.IdVentaNavigation)
+            .Where(vd => vd.IdVentaNavigation.IdSucursal == idSucursal)
+            .Select(vd => new
             {
-                return NotFound(); // Manejo de error si el id es inválido
-            }
+                IdGusto = vd.IdGustoNavigation.IdGusto,
+                NombreGusto = vd.IdGustoNavigation.NombreGusto,
+                CantidadVendida = vd.Cantidad,
+                SemaforoEstado = vd.Cantidad > 5 ? "verde" :
+                                 vd.Cantidad >= 4 ? "amarillo" :
+                                 "rojo"
+            })
+            .ToList();
 
-            // Obtener los gustos vendidos en la sucursal seleccionada
-            var gustosVendidos = _context.VentasDetalles
-                .Include(vd => vd.IdGustoNavigation) // Incluir el Gusto
-                .Include(vd => vd.IdVentaNavigation) // Incluir la Venta
-                .Where(vd => vd.IdVentaNavigation.IdSucursal == idSucursal) // Filtrar por sucursal
-                .ToList();
+        var sucursal = _context.Sucursales.FirstOrDefault(s => s.IdSucursal == idSucursal);
 
-            // Obtener el nombre de la sucursal para mostrar en la vista
-            var sucursal = _context.Sucursales.FirstOrDefault(s => s.IdSucursal == idSucursal);
-
-            // Verificar si se encontró la sucursal
-            if (sucursal == null)
-            {
-                return NotFound(); // Manejo de error si no se encuentra la sucursal
-            }
-
-            ViewBag.NombreSucursal = sucursal.CalleSucursal; // O el nombre que desees mostrar
-
-            return View(gustosVendidos);
+        if (sucursal == null)
+        {
+            return NotFound();
         }
+
+        ViewBag.NombreSucursal = sucursal.CalleSucursal;
+        ViewBag.IdLocalidad = sucursal.IdLocalidad;
+
+        return View(gustosVendidos);
     }
 }

@@ -19,9 +19,8 @@ public class SucursalesController : Controller
 
     public IActionResult SucursalesPorLocalidad(int idLocalidad)
     {
-        int KilosObjetivo = 10;
 
-        var sucursales = _context.Sucursales
+        var sucursal = _context.Sucursales
             .Where(s => s.IdLocalidad == idLocalidad)
             .Select(s => new
             {
@@ -44,10 +43,10 @@ public class SucursalesController : Controller
 
                     SemaforoEstado = _context.VentasDetalles
                     .Where(v => v.IdVentaNavigation.IdSucursal == s.IdSucursal)
-                    .Sum(v => v.Cantidad) > 5 ? "verde"
+                    .Sum(v => v.Cantidad) >= 10 ? "verde"
                     : _context.VentasDetalles
                     .Where(v => v.IdVentaNavigation.IdSucursal == s.IdSucursal)
-                    .Sum(v => v.Cantidad) >= 4 ? "amarillo"
+                    .Sum(v => v.Cantidad) >= 7 ? "amarillo"
                     : "rojo"
 
             })
@@ -59,7 +58,7 @@ public class SucursalesController : Controller
             .Select(l => l.NombreLocalidad)
             .FirstOrDefault();
 
-        return View(sucursales);
+        return View(sucursal);
     }
 
 }

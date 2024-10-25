@@ -1,5 +1,6 @@
-﻿@model IEnumerable<WebHeladeria.Models.Localidade>
+﻿@model IEnumerable<dynamic>
 
+    <link href="~/css/site.css" />
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h3 class="m-0 font-weight-bold text-primary">Lista de Localidades</h3>
@@ -26,21 +27,18 @@
                                     <td>@localidade.IdLocalidad</td>
                                     <td>@localidade.NombreLocalidad</td>
                                     <td>@localidade.KilosVendidos</td>
-                                    <td>@localidade.EstadoObjetivo</td>
+                                    <td class="parent">
+                                        <span class="semaforo @localidade.SemaforoEstado"></span>
+                                    </td>
                                     <td>
-                                        @if (localidade.GustosMasVendidos.Any())
-                                        {
+
                                             <ol>
                                                 @foreach (var gusto in localidade.GustosMasVendidos)
                                                 {
                                                     <li>@gusto</li>
                                                 }
                                             </ol>
-                                        }
-                                        else
-                                        {
-                                            <span>No hay datos de ventas</span>
-                                        }
+
                                     </td>
                                     <td>
                                         <a asp-controller="Sucursales" asp-action="SucursalesPorLocalidad" asp-route-idLocalidad="@localidade.IdLocalidad">

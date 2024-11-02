@@ -36,7 +36,7 @@ public class GustosController : Controller
                 NombreGusto = vd.IdGustoNavigation.NombreGusto,
                 CantidadVendida = vd.Cantidad,
                 SemaforoEstado = vd.Cantidad >= 5 ? "verde" :
-                                 vd.Cantidad == 4 ? "amarillo" :
+                                 vd.Cantidad == 3 ? "amarillo" :
                                  "rojo"
             })
             .ToList();

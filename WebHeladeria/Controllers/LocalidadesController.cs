@@ -34,10 +34,10 @@ namespace WebHeladeria.Controllers
                         .Sum(v => v.Cantidad),
                     SemaforoEstado = _context.VentasDetalles
                         .Where(v => v.IdVentaNavigation.IdSucursalNavigation.IdLocalidad == l.IdLocalidad)
-                        .Sum(v => v.Cantidad) >= 10 ? "verde" :
+                        .Sum(v => v.Cantidad) >= 15 ? "verde" :
                             _context.VentasDetalles
                             .Where(v => v.IdVentaNavigation.IdSucursalNavigation.IdLocalidad == l.IdLocalidad)
-                            .Sum(v => v.Cantidad) >= 5 ? "amarillo" : "rojo"
+                            .Sum(v => v.Cantidad) >= 10 ? "amarillo" : "rojo"
                 })
                 .ToListAsync();
 
